@@ -1,27 +1,11 @@
 #!/usr/bin/env perl
-use warnings;
+
 use strict;
+use warnings;
+use POSIX qw(strftime);
 
-#my $dir = "/tmp/latexClip";
-#my $file = "$dir/f.latex";
-#my $pdf = "$dir/f.pdf";
-my $png = `mktemp screenshot.XXXX.png`;
-#if (-e $dir) {
-#    system("mkdir $dir");
-#} else {
-
-#my $dir = `mktemp -d /tmp/latexClip.XXXXX`;
-##chomp $dir;
-#system("mkdir $dir");
-#open(my $FH, ">", $file);
-
-#}
-
-# -n = noswap
-# +5 = line 5
-
-system("screenshotifinator && scrot -ub -e 'xclip -selection clip -t image/png \$f && mv \$f ~/Pictures/screenshots 2>/dev/null'");
-
-#system("xclip -selection clip -t image/png $png");
-#system("feh $png");
-
+my $date = strftime '%Y-%m-%d-%H%M%S', localtime;
+my $path=$ENV{"HOME"}."/Pictures/screenshots/$date.png";
+system ("maim", "-s", $path, "--hidecursor") and die;
+system ("xclip", "-selection", "clipboard", "-t", "image/png", $path) and die;
+system ("feh", $path);
